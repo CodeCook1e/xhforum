@@ -1,0 +1,22 @@
+/* 全局样式表 */
+html,
+body,
+#app {
+  background-color: #f3f3f3;
+  height: calc(100vh - 62px);
+  min-height: calc(100vh - 62px);
+  margin: 0;
+  padding: 0;
+  /* min-width: 1366px; */
+}
+.ant-tabs-nav .ant-tabs-tab:hover {
+  color: #1e9654;
+}
+
+.ant-tabs-nav .ant-tabs-tab-active {
+  color: #1e9654;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #1e9654;
+}
