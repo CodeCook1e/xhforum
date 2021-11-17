@@ -1,7 +1,7 @@
 /*
  * @Author: qiuqi
  * @Date: 2021-09-17 20:27:07
- * @LastEditTime: 2021-10-29 16:11:56
+ * @LastEditTime: 2021-11-16 16:12:07
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\api\api.js
@@ -18,12 +18,16 @@ export const loginApi = (loginForm) => {
   return http.axios
     .post("/users/login", loginForm)
 }
+// 管理员登录
+export const adminLoginApi = (loginForm) => {
+  return http.axios
+    .post("/users/adminLogin", loginForm)
+}
 // 用户注册
 export const registerApi = (registerForm) => {
   return http.axios
     .post("/users", registerForm)
 }
-
 // 获取所有用户（管理端）
 export const getAllUsersApi = () => {
   return http.axios.get("/user/allUsers")
@@ -47,23 +51,29 @@ export const updateUserApi = (userId, updateUserForm) => {
 export const deleteUserApi = (userId) => {
   return http.axios.delete('/user/deleteUser/' + userId)
 }
+
+// 更改头像
+export const updateImageApi = (userForm) => {
+  return http.axios.put('/user/image', userForm)
+}
+
 /*
  *
  * @ 档案Api 
  *
  */
-// // 获取用户资料
-// export const getProfileApi = (username) => {
-//   return http.axios.get('/profiles/' + username)
-// }
-// // 关注用户
-// export const followUserApi = (username) => {
-//   return http.axios.post('/profiles/' + username + '/follow')
-// }
-// // 取消关注用户
-// export const unfollowUserApi = (username) => {
-//   return http.axios.delete('/profiles/' + username + '/follow')
-// }
+// 获取用户资料
+export const getProfileApi = (userId) => {
+  return http.axios.get('/profiles/' + userId)
+}
+// 关注用户
+export const followUserApi = (userId) => {
+  return http.axios.post('/profiles/' + userId + '/follow')
+}
+// 取消关注用户
+export const unfollowUserApi = (userId) => {
+  return http.axios.delete('/profiles/' + userId + '/unfollow')
+}
 
 /*
  *
@@ -71,49 +81,65 @@ export const deleteUserApi = (userId) => {
  *
  */
 // 获取文章列表
-export const getArticleListApi = () => {
-  return http.axios.get('/articles')
+export const getArticleListApi = (params) => {
+  return http.axios({
+    url: '/articles',
+    method: 'GET',
+    params: params
+  })
+}
+// 获取热门文章列表
+export const getHotArticleListApi = () => {
+  return http.axios.get('/articles/hot')
 }
 // 获取用户关注的作者文章列表
-// export const getFeedArticlesApi = () => {
-//   return http.axios.get('/articles/feed')
-// }
+export const getFeedArticlesApi = () => {
+  return http.axios.get('/articles/feed')
+}
 // 获取文章
 export const getArticleApi = (articleId) => {
   return http.axios.get('/articles/' + articleId)
 }
 // 创建文章
-export const createArticleApi = () => {
-  return http.axios.post('/articles')
+export const createArticleApi = (params) => {
+  return http.axios.post('/articles', params)
 }
 // 更新当前文章
-export const updateArticleApi = (articleId) => {
-  return http.axios.put('/articles/' + articleId)
+export const updateArticleApi = (articleId, params) => {
+  return http.axios.put('/articles/' + articleId, params)
+}
+// 更新当前文章（管理员）
+export const adminUpdateArticleApi = (articleId, params) => {
+  return http.axios.put('/articles/admin/' + articleId, params)
 }
 // 删除当前文章
 export const deleteArticleApi = (articleId) => {
   return http.axios.delete('/articles/' + articleId)
 }
-// // 在当前文章添加评论
-// export const addCommentsApi = (articleId) => {
-//   return http.axios.post('/articles/' + articleId + '/comments')
-// }
-// // 获取当前文章评论
-// export const getCommentsApi = (articleId) => {
-//   return http.axios.get('/articles/' + articleId + '/comments')
-// }
-// // 删除评论
-// export const deleteCommentApi = (articleId, commentId) => {
-//   return http.axios.delete('/articles/' + articleId + '/comments/' + commentId)
-// }
-// // 收藏文章
-// export const favoriteArticleApi = (articleId) => {
-//   return http.axios.post('/articles/' + articleId + '/favorite')
-// }
-// // 取消收藏文章
-// export const unfavoriteArticleApi = (articleId) => {
-//   return http.axios.delete('/articles/' + articleId + '/favorite')
-// }
+// 删除当前文章（管理员）
+export const adminDeleteArticleApi = (articleId) => {
+  return http.axios.delete('/articles/admin/' + articleId)
+}
+// 在当前文章添加评论
+export const addCommentsApi = (articleId, params) => {
+  return http.axios.post('/articles/' + articleId + '/comments', params)
+}
+// 获取当前文章评论
+export const getCommentsApi = (articleId) => {
+  return http.axios.get('/articles/' + articleId + '/comments')
+}
+// 删除评论
+export const deleteCommentApi = (articleId, commentId) => {
+  return http.axios.delete('/articles/' + articleId + '/comments/' + commentId)
+}
+// 收藏文章
+export const favoriteArticleApi = (articleId) => {
+  return http.axios.post('/articles/' + articleId + '/favorite')
+}
+// 取消收藏文章
+export const unfavoriteArticleApi = (articleId) => {
+  return http.axios.delete('/articles/' + articleId + '/favorite')
+}
 
 /*
  *
@@ -121,6 +147,36 @@ export const deleteArticleApi = (articleId) => {
  *
  */
 // 获取标签
-// export const getTagsApi = () => {
-//   return http.axios.get('/tags')
-// }
+export const getTagsApi = () => {
+  return http.axios.get('/tags')
+}
+
+// 添加父标签
+export const createTagApi = (params) => {
+  return http.axios.post('tags/create', params)
+}
+
+// 添加子标签
+export const createChildTagApi = (tagId, params) => {
+  return http.axios.post('tags/create/' + tagId, params)
+}
+
+// 编辑父标签
+export const updateTagApi = (tagId, params) => {
+  return http.axios.put('tags/update/' + tagId, params)
+}
+
+// 编辑子标签
+export const updateChildTagApi = (tagParentId, tagChildrenId, params) => {
+  return http.axios.put('tags/update/children/' + tagParentId + "/" + tagChildrenId, params)
+}
+
+// 删除父标签
+export const deleteTagApi = (tagId, params) => {
+  return http.axios.delete('tags/delete/' + tagId, params)
+}
+
+// 删除子标签
+export const deleteChildTagApi = (tagParentId, tagChildrenId) => {
+  return http.axios.delete('tags/delete/children/' + tagParentId + "/" + tagChildrenId)
+}

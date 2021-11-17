@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-04 17:16:40
- * @LastEditTime: 2021-10-05 21:12:13
+ * @LastEditTime: 2021-10-31 15:59:51
  * @LastEditors: Please set LastEditors
  * @Description: 管理系统主页面
  * @FilePath: \xh_forum\src\pages\AdminHome\AdminHome.vue
@@ -13,6 +13,7 @@
         <img src="../../assets/image/logo.png" alt="" />
         <span>后台管理系统</span>
       </div>
+      <a class="nav-top-btn" type="primary" @click="logout"> 退出登录 </a>
     </a-layout-header>
     <a-layout>
       <a-layout-sider class="layout-sider" width="200" style="background: #fff">
@@ -41,6 +42,7 @@
   </a-layout>
 </template>
 <script>
+import http from "../../api/http";
 export default {
   data() {
     return {
@@ -48,6 +50,12 @@ export default {
     };
   },
   methods: {
+    // 退出登录
+    logout() {
+      http.adminRemoveToken();
+      this.$router.push("/admin");
+      this.$message.success("退出登录成功");
+    },
     clickUser() {
       this.$router.push("/adminhome/user");
     },
@@ -85,5 +93,26 @@ export default {
 .layout-sider {
   min-height: calc(100vh - 64px);
   height: 100%;
+}
+
+.nav-top-btn {
+  float: right;
+  display: block;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 0 20px;
+  margin-right: -50px;
+  font-size: 14px;
+  line-height: 62px;
+  background-color: #32b16c;
+  color: #fff;
+  text-align: center;
+}
+
+.nav-top-btn:hover {
+  text-decoration: none;
+  background-color: #1e9654;
+  transition: all 0.3s ease-in-out;
+  color: #fff;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-04 16:33:27
- * @LastEditTime: 2021-10-28 17:24:48
+ * @LastEditTime: 2021-10-31 15:37:41
  * @LastEditors: Please set LastEditors
  * @Description: 登录页面
  * @FilePath: \xh_forum\src\views\Login\Login.vue
@@ -109,7 +109,6 @@ export default {
           await loginApi(this.loginForm).then((res) => {
             this.$message.success("登陆成功");
             this.$router.push("/home");
-            console.log(res.data.token);
             http.setToken(res.data.token);
           });
         }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-20 12:26:59
- * @LastEditTime: 2021-09-21 00:26:16
+ * @LastEditTime: 2021-11-04 16:08:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\main.js
@@ -11,7 +11,12 @@ import App from './App.vue'
 import router from './router'
 import './plugins/antui'
 import './api/http'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
 
+import moment from "moment"
+Vue.prototype.$moment = moment;
+
+Vue.use(CKEditor);
 // 导入全局样式表
 import './assets/css/global.css'
 

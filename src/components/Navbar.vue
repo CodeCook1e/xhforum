@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-08-25 16:27:09
- * @LastEditTime: 2021-10-28 16:28:07
+ * @LastEditTime: 2021-11-16 15:09:01
  * @LastEditors: Please set LastEditors
  * @Description: 导航栏
  * @FilePath: \xh_forum\src\components\Navbar.vue
@@ -34,6 +34,13 @@
             >论坛中心</a
           >
         </li>
+        <li class="nav-item">
+          <a
+            :class="this.$route.path == '/writearticle' ? 'list-active' : ''"
+            @click="gowritearticle"
+            >发帖子</a
+          >
+        </li>
       </ul>
       <div class="nav-top-operation" v-if="!isLogin">
         <!-- 登陆人信息 -->
@@ -48,10 +55,19 @@
       <div class="nav-top-operation" v-else>
         <!-- 登陆人信息 -->
         <div class="nav-top-operation-info" @click="toProfile">
-          <div class="nav-top-info-ava">
-            <div v-if="!userInfo.image"><a-icon type="user" /></div>
-            <!-- 头像 -->
-            <div v-else></div>
+          <div class="nav-top-info-img">
+            <a-avatar
+              v-if="!userInfo.image"
+              class="info-img"
+              :src="defaultImgSrc"
+              alt="用户头像"
+            />
+            <a-avatar
+              v-else
+              class="info-img"
+              :src="userInfo.image"
+              alt="用户头像"
+            />
           </div>
           <div class="nav-top-info-name">{{ userInfo.username }}</div>
         </div>
@@ -100,6 +116,8 @@ export default {
       visible: false,
       // 当前登录的信息
       userInfo: {},
+      defaultImgSrc:
+        "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
     };
   },
   created() {
@@ -111,6 +129,12 @@ export default {
     },
     onClose() {
       this.visible = false;
+    },
+    // 获取个人信息
+    getCurrentUser() {
+      getCurrentUserApi().then((res) => {
+        this.userInfo = res.data.user;
+      });
     },
     // 退出登录
     logout() {
@@ -131,15 +155,20 @@ export default {
     goforum() {
       this.$router.push("/forum");
     },
+    // 跳转到发帖子页面
+    gowritearticle() {
+      if (!this.isLogin) {
+        this.$message.warning("请先登录再进行操作！");
+      } else {
+        this.$router.push("/writearticle");
+      }
+    },
   },
   watch: {
     isLogin(val) {
       if (val === true) {
         // 获取登陆人信息
-        getCurrentUserApi().then((res) => {
-          this.userInfo = res.data.user;
-          console.log(this.userInfo);
-        });
+        this.getCurrentUser();
       }
     },
   },
@@ -230,6 +259,18 @@ a {
 
 .nav-top-info-ava > div {
   font-size: 18px;
+}
+
+.nav-top-info-img {
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-img {
+  width: 35px;
+  height: 35px;
 }
 
 .nav-top-info-name {

@@ -1,7 +1,7 @@
 /*
  * @Author: qiuqi
  * @Date: 2021-08-20 12:26:59
- * @LastEditTime: 2021-10-29 15:43:55
+ * @LastEditTime: 2021-11-16 15:46:46
  * @LastEditors: Please set LastEditors
  * @Description: 路由配置
  * @FilePath: \xh_forum\src\router\index.js
@@ -44,6 +44,10 @@ const routes = [
     path: '/forum',
     component: () => import("../pages/Forum/Forum.vue")
   },
+  {
+    path: '/forum/:tagname',
+    component: () => import("../pages/Forum/Forum.vue")
+  },
   // 我的资料页面
   {
     path: '/myprofile',
@@ -51,7 +55,7 @@ const routes = [
   },
   // 他人资料页面
   {
-    path: '/profile',
+    path: '/profile/:userId',
     component: () => import("../pages/Profile/Profile.vue")
   },
   // 写文章界面
@@ -59,11 +63,20 @@ const routes = [
     path: '/writearticle',
     component: () => import("../pages/WriteArticle/WriteArticle.vue")
   },
+  // 查看文章界面
+  {
+    path: '/article/:articleId',
+    component: () => import("../pages/Article/Article.vue")
+  },
   // 管理平台页面
   {
     path: '/admin',
     component: () => import("../pages/AdminLogin/AdminLogin.vue")
-
+  },
+  // 404 页面
+  {
+    path: "*",
+    component: () => import("../pages/404/404.vue")
   },
   {
     path: '/adminhome',
@@ -87,7 +100,7 @@ const router = new VueRouter({
   routes
 })
 
-// 挂载路由导航守卫
+// 挂载路由导航守卫（登录）
 router.beforeEach((to, from, next) => {
   const token = window.localStorage.getItem('Authorization')
   if (to.path === '/login') {
@@ -96,4 +109,14 @@ router.beforeEach((to, from, next) => {
   next()
 })
 
+// 挂载路由导航守卫（管理端登录）
+router.beforeEach((to, from, next) => {
+  const token = window.localStorage.getItem('adminAuthorization')
+  if (to.path === '/adminhome/user' || to.path === '/adminhome/article' || to.path === '/adminhome/Tag') {
+    if (!token) return next('/admin')
+  } else if (to.path === '/admin') {
+    if (token) return next('/adminhome')
+  }
+  next()
+})
 export default router

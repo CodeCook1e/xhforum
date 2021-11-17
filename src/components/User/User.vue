@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-05 20:51:41
- * @LastEditTime: 2021-10-29 16:37:28
+ * @LastEditTime: 2021-10-31 14:04:58
  * @LastEditors: Please set LastEditors
  * @Description: 用户管理组件
  * @FilePath: \xh_forum\src\components\User\User.vue
@@ -22,6 +22,9 @@
       }"
     >
       <a-table :columns="columns" :data-source="userList" rowKey="_id">
+        <template slot="admin" slot-scope="text, user">
+          <a-switch :checked="user.admin" @change="adminChange(user)" />
+        </template>
         <template slot="operation" slot-scope="text, user">
           <a href="javascript:;" class="editBtn" @click="editUser(user)"
             >编辑</a
@@ -61,7 +64,7 @@
             v-decorator="[
               'username',
               {
-                initialValue: this.userInfo.user.username,
+                initialValue: userInfo.user.username,
                 rules: [{ required: true, message: '用户名不能为空！' }],
               },
             ]"
@@ -72,7 +75,7 @@
             v-decorator="[
               'email',
               {
-                initialValue: this.userInfo.user.email,
+                initialValue: userInfo.user.email,
                 rules: [{ required: true, message: '邮箱不能为空！' }],
               },
             ]"
@@ -83,7 +86,7 @@
             v-decorator="[
               'bio',
               {
-                initialValue: this.userInfo.user.bio,
+                initialValue: userInfo.user.bio,
                 rules: [{ required: true, message: '个人简介不能为空！' }],
               },
             ]"
@@ -101,9 +104,15 @@ const columns = [
   { title: "邮箱", dataIndex: "email", key: "email" },
   { title: "个人简介", dataIndex: "bio", key: "bio" },
   {
+    title: "管理员权限",
+    dataIndex: "",
+    key: "admin",
+    scopedSlots: { customRender: "admin" },
+  },
+  {
     title: "操作",
     dataIndex: "",
-    key: "x",
+    key: "operation",
     scopedSlots: { customRender: "operation" },
   },
 ];
@@ -156,7 +165,7 @@ export default {
           this.userInfo.user.bio = values.bio;
           await updateUserApi(this.userInfo.user._id, this.userInfo).then(
             (res) => {
-              this.$message.success("编辑用户成功");
+              this.$message.success("编辑用户成功！");
               this.getAllUsers();
               this.visible = false;
             }
@@ -168,6 +177,17 @@ export default {
     // 取消编辑用户
     editUserCancel() {
       this.visible = false;
+    },
+
+    // 改变用户权限
+    adminChange(user) {
+      user.admin = !user.admin;
+      this.userInfo.user = user;
+      updateUserApi(user._id, this.userInfo).then((res) => {
+        this.$message.success("更改权限成功！");
+        this.getAllUsers();
+        console.log(this.userInfo.user);
+      });
     },
   },
 };

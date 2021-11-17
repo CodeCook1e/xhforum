@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 21:13:06
- * @LastEditTime: 2021-09-18 09:33:08
+ * @LastEditTime: 2021-11-09 15:15:44
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\api\index.js
@@ -12,6 +12,7 @@ import {
 } from "ant-design-vue";
 // tokenKey 保存在localtorage中的键名
 const tokenKey = "Authorization";
+const adminTokenKey = "adminAuthorization"
 
 // setToken 保存 token 到 localStorage 中。
 // duration: token 保存多长时间后失效，单位为秒。
@@ -30,6 +31,22 @@ function setToken(value, duration) {
     };
   }
   localStorage.setItem(tokenKey, JSON.stringify(token));
+}
+
+function adminSetToken(value, duration) {
+  let token;
+  if (duration == null) {
+    token = {
+      data: value
+    };
+  } else {
+    let expires = new Date().getTime() + duration * 1000;
+    token = {
+      data: value,
+      expires: expires
+    };
+  }
+  localStorage.setItem(adminTokenKey, JSON.stringify(token))
 }
 
 // 从localStorage中读取token，如果不存在则返回''
@@ -55,6 +72,10 @@ function getToken() {
 // 移除 token
 function removeToken() {
   localStorage.removeItem(tokenKey);
+}
+
+function adminRemoveToken() {
+  localStorage.removeItem(adminTokenKey);
 }
 
 const customAxios = axios.create();
@@ -118,7 +139,6 @@ function successHandle(res) {
 function errorHandle(status, other) {
   switch (status) {
     case 400:
-      // console.log(other.errors[0].msg);
       message.error(other.errors[0].msg)
       break;
     case 401:
@@ -135,14 +155,15 @@ function errorHandle(status, other) {
     case 502:
       break;
     default:
-      console.log(other.errors[0].msg);
-      message.error(other);
+      message.error(other.errors[0].msg);
   }
 }
 
 export default {
   axios: customAxios,
   setToken,
+  adminSetToken,
   getToken,
-  removeToken
+  removeToken,
+  adminRemoveToken
 };
