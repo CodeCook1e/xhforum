@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-05 21:04:47
- * @LastEditTime: 2021-11-13 17:53:34
+ * @LastEditTime: 2021-11-20 13:47:58
  * @LastEditors: Please set LastEditors
  * @Description: 帖子标签管理
  * @FilePath: \xh_forum\src\components\Tag\Tag.vue
@@ -25,6 +25,12 @@
       <a-table :columns="columns" :data-source="tagsList" rowKey="_id">
         <template slot="parentTag" slot-scope="text, tag">
           <a-tag color="#32b16c">{{ tag.tagname }}</a-tag>
+        </template>
+        <template slot="image" slot-scope="text, tag">
+          <div v-if="tag.image">
+            <img class="table--tag-img" :src="tag.image" alt="" />
+          </div>
+          <span v-else>-</span>
         </template>
         <template slot="operation" slot-scope="text, tag">
           <a
@@ -101,10 +107,29 @@
             v-decorator="[
               'tagname',
               {
-                initialValue: tagInfo.tag.tagname,
                 rules: [{ required: true, message: '标签名不能为空！' }],
               },
             ]"
+          />
+        </a-form-item>
+        <a-form-item name="describe" label="描述">
+          <a-input
+            v-decorator="[
+              'describe',
+              {
+                rules: [{ required: true, message: '描述不能为空！' }],
+              },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item label="展示图片">
+          <input
+            type="file"
+            accept="image/*"
+            name="uploader-input"
+            class="uploader-file"
+            id="upload"
+            @change="(event) => createImage(event)"
           />
         </a-form-item>
       </a-form>
@@ -138,6 +163,38 @@
             ]"
           />
         </a-form-item>
+        <a-form-item name="describe" label="描述">
+          <a-input
+            v-decorator="[
+              'describe',
+              {
+                initialValue: tagInfo.tag.describe,
+                rules: [{ required: true, message: '描述不能为空！' }],
+              },
+            ]"
+          />
+        </a-form-item>
+        <a-form-item v-if="tagInfo.tag.image" name="image" label="展示图片">
+          <div class="form-tag-image-content">
+            <img
+              class="form-tag-image"
+              id="show"
+              :src="tagInfo.tag.image"
+              alt=""
+            />
+          </div>
+          <input
+            type="file"
+            accept="image/*"
+            name="uploader-input"
+            class="uploader-file"
+            id="upload"
+            @change="(event) => updateImage(event)"
+          />
+          <div class="update-image-tip">
+            <div>点击修改图片</div>
+          </div>
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
@@ -152,7 +209,13 @@ const columns = [
     key: "parentTag",
     scopedSlots: { customRender: "parentTag" },
   },
-  // { title: "帖子数量", dataIndex: "tagname", key: "tagname" },
+  { title: "标签描述", dataIndex: "describe", key: "describe" },
+  {
+    title: "展示图片",
+    dataIndex: "",
+    key: "image",
+    scopedSlots: { customRender: "image" },
+  },
   {
     title: "操作",
     dataIndex: "",
@@ -168,6 +231,7 @@ import {
   createChildTagApi,
   updateChildTagApi,
   deleteChildTagApi,
+  createChildTagImageApi,
 } from "../../api/api";
 export default {
   data() {
@@ -186,6 +250,10 @@ export default {
       addSonForm: this.$form.createForm(this, { name: "addSonForm" }),
       // 当前父标签
       parentId: "",
+      // 添加子标签的图片
+      tagForms: "",
+      // 更新子标签的图片
+      updateTagForms: "",
     };
   },
   created() {
@@ -205,14 +273,16 @@ export default {
     },
 
     addTagOk() {
-      this.addform.validateFields(async (err, values) => {
+      this.addform.validateFields((err, values) => {
         if (!err) {
           console.log(values);
           this.addTagInfo.tag.tagname = values.tagname;
-          await createTagApi({
+          this.addTagInfo.tag.describe = values.describe;
+          createTagApi({
             tag: {
               tagname: this.addTagInfo.tag.tagname,
               parentId: this.addTagInfo.tag.parentId,
+              describe: this.addTagInfo.tag.describe,
             },
           }).then((res) => {
             this.$message.success("添加标签名成功！");
@@ -241,9 +311,11 @@ export default {
             console.log(this.tagInfo.tag);
             console.log(values);
             this.tagInfo.tag.tagname = values.tagname;
+            this.tagInfo.tag.describe = values.describe;
             updateTagApi(this.tagInfo.tag._id, {
               tag: {
                 tagname: this.tagInfo.tag.tagname,
+                describe: this.tagInfo.tag.describe,
               },
             }).then((res) => {
               this.$message.success("编辑父标签名成功！");
@@ -252,15 +324,45 @@ export default {
             });
           } else {
             this.tagInfo.tag.tagname = values.tagname;
-            updateChildTagApi(this.tagInfo.tag.parentId, this.tagInfo.tag._id, {
-              tag: {
-                tagname: this.tagInfo.tag.tagname,
-              },
-            }).then((res) => {
-              this.$message.success("编辑子标签名成功！");
-              this.getTagsList();
-              this.editVisible = false;
-            });
+            this.tagInfo.tag.describe = values.describe;
+            if (this.updateTagForms) {
+              createChildTagImageApi(this.updateTagForms).then((res) => {
+                console.log(res.data.url);
+                this.tagInfo.tag.image = res.data.url;
+                updateChildTagApi(
+                  this.tagInfo.tag.parentId,
+                  this.tagInfo.tag._id,
+                  {
+                    tag: {
+                      tagname: this.tagInfo.tag.tagname,
+                      describe: this.tagInfo.tag.describe,
+                      image: this.tagInfo.tag.image,
+                    },
+                  }
+                ).then((res) => {
+                  this.$message.success("编辑子标签名成功！");
+                  this.updateTagForms = "";
+                  this.getTagsList();
+                  this.editVisible = false;
+                });
+              });
+            } else {
+              updateChildTagApi(
+                this.tagInfo.tag.parentId,
+                this.tagInfo.tag._id,
+                {
+                  tag: {
+                    tagname: this.tagInfo.tag.tagname,
+                    describe: this.tagInfo.tag.describe,
+                    image: this.tagInfo.tag.image,
+                  },
+                }
+              ).then((res) => {
+                this.$message.success("编辑子标签名成功！");
+                this.getTagsList();
+                this.editVisible = false;
+              });
+            }
           }
         }
       });
@@ -268,6 +370,7 @@ export default {
 
     // 取消编辑标签
     editTagCancel() {
+      this.updateTagForms = "";
       this.editVisible = false;
     },
 
@@ -296,21 +399,29 @@ export default {
 
     //确定添加子标签
     addSonTagOk() {
-      this.addSonForm.validateFields(async (err, values) => {
+      this.addSonForm.validateFields((err, values) => {
         if (!err) {
           console.log(values);
           this.addTagInfo.tag.tagname = values.tagname;
+          this.addTagInfo.tag.describe = values.describe;
           this.addTagInfo.tag.parentId = this.parentId;
-          await createChildTagApi(this.addTagInfo.tag.parentId, {
-            tag: {
-              tagname: this.addTagInfo.tag.tagname,
-              parentId: this.addTagInfo.tag.parentId,
-            },
-          }).then((res) => {
-            this.$message.success("添加标签名成功！");
-            this.getTagsList();
-            this.addSonVisible = false;
-            this.addTagInfo.tag.parentId = "";
+          createChildTagImageApi(this.tagForms).then((res) => {
+            console.log(res.data.url);
+            this.addTagInfo.tag.image = res.data.url;
+            createChildTagApi(this.addTagInfo.tag.parentId, {
+              tag: {
+                tagname: this.addTagInfo.tag.tagname,
+                parentId: this.addTagInfo.tag.parentId,
+                describe: this.addTagInfo.tag.describe,
+                image: this.addTagInfo.tag.image,
+              },
+            }).then((res) => {
+              this.$message.success("添加标签名成功！");
+              this.getTagsList();
+              this.tagForms = "";
+              this.addTagInfo.tag.parentId = "";
+              this.addSonVisible = false;
+            });
           });
         }
       });
@@ -318,7 +429,31 @@ export default {
 
     // 取消添加子标签
     addSonTagCancel() {
+      this.tagForms = "";
       this.addSonVisible = false;
+    },
+
+    // 创建标签照片
+    createImage(event) {
+      console.log(event.currentTarget.files[0]);
+      let forms = new FormData();
+      forms.append("file", event.currentTarget.files[0]);
+      this.tagForms = forms;
+    },
+
+    // 修改标签图片
+    updateImage(event) {
+      console.log(event.currentTarget.files[0]);
+      let forms = new FormData();
+      forms.append("file", event.currentTarget.files[0]);
+      this.updateTagForms = forms;
+      // 预览图片
+      let reads = new FileReader();
+      let f = event.currentTarget.files[0];
+      reads.readAsDataURL(f);
+      reads.onload = function (e) {
+        document.getElementById("show").src = this.result;
+      };
     },
   },
 };
@@ -344,5 +479,56 @@ export default {
 }
 .deleteBtn {
   color: red;
+}
+.table--tag-img {
+  width: 40px;
+  height: 40px;
+}
+.form-tag-image-content {
+  width: 80px;
+  height: 80px;
+}
+
+.form-tag-image {
+  width: 80px;
+  height: 80px;
+}
+
+.uploader-file {
+  box-sizing: border-box;
+  padding: 40px;
+  cursor: pointer;
+  opacity: 0;
+  position: absolute;
+  top: 0px;
+  width: 80px;
+  height: 80px;
+  z-index: 100;
+}
+
+.update-image-tip {
+  opacity: 0;
+  position: absolute;
+  top: 0px;
+  margin: 0 auto;
+  width: 80px;
+  height: 80px;
+  z-index: 10;
+  background-color: rgba(155, 155, 155, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.1s;
+}
+
+.update-image-tip > div {
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+}
+
+.uploader-file:hover + .update-image-tip {
+  opacity: 1;
+  cursor: pointer;
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-05 21:04:39
- * @LastEditTime: 2021-11-12 16:14:40
+ * @LastEditTime: 2021-11-20 15:23:49
  * @LastEditors: Please set LastEditors
  * @Description: 帖子管理
  * @FilePath: \xh_forum\src\components\Article\article.vue
@@ -22,6 +22,10 @@
       }"
     >
       <a-table :columns="columns" :data-source="articleList" rowKey="_id">
+        <template slot="anonymous" slot-scope="text, article">
+          <a-tag v-if="article.anonymous" color="red">是</a-tag>
+          <a-tag v-else color="green">否</a-tag>
+        </template>
         <template slot="operation" slot-scope="text, article">
           <a href="javascript:;" class="editBtn" @click="goArticle(article)"
             >查看详情</a
@@ -113,6 +117,13 @@ const columns = [
   { title: "文章标题", dataIndex: "title", key: "title" },
   { title: "文章简介", dataIndex: "description", key: "description" },
   { title: "作者", dataIndex: "author.username", key: "author.username" },
+  // { title: "是否匿名", dataIndex: "anonymous", key: "anonymous" },
+  {
+    title: "是否匿名",
+    dataIndex: "",
+    key: "anonymous",
+    scopedSlots: { customRender: "anonymous" },
+  },
   { title: "创建时间", dataIndex: "createAt", key: "createAt" },
   { title: "更新时间", dataIndex: "updateAt", key: "updateAt" },
   {
@@ -134,8 +145,37 @@ export default {
       editor: ClassicEditor,
       editorData: "",
       editorConfig: {
-        // Run the editor with the German UI.
-        // language: "",
+        language: "zh",
+        toolbar: {
+          items: [
+            "heading",
+            "|",
+            "alignment",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "uploadImage",
+            "undo",
+            "redo",
+          ],
+        },
+        image: {
+          toolbar: [
+            "imageStyle:inline",
+            "imageStyle:wrapText",
+            "imageStyle:breakText",
+            "|",
+            "toggleImageCaption",
+            "imageTextAlternative",
+          ],
+        },
+        ckfinder: {
+          // uploadUrl: "http://localhost:3000/api/articles/upload",
+          uploadUrl: "http://192.168.31.113:3000/api/articles/upload",
+        },
       },
       // 文章列表
       articleList: [],

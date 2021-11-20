@@ -1,7 +1,7 @@
 /*
  * @Author: qiuqi
  * @Date: 2021-08-20 12:26:59
- * @LastEditTime: 2021-11-16 15:46:46
+ * @LastEditTime: 2021-11-19 17:01:17
  * @LastEditors: Please set LastEditors
  * @Description: 路由配置
  * @FilePath: \xh_forum\src\router\index.js
@@ -119,4 +119,16 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
+router.beforeEach((to, from, next) => {
+  // 让页面回到顶部
+  // chrome
+  document.body.scrollTop = 0;
+  // firefox
+  document.documentElement.scrollTop = 0;
+  // safari
+  window.pageYOffset = 0;
+  next()
+})
+
 export default router

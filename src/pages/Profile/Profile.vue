@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-28 16:23:15
- * @LastEditTime: 2021-11-17 13:47:50
+ * @LastEditTime: 2021-11-18 21:50:35
  * @LastEditors: Please set LastEditors
  * @Description: 个人资料页面
  * @FilePath: \xh_forum\src\pages\Profile\Profile.vue
@@ -119,6 +119,7 @@
         </div>
       </div>
     </div>
+    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -174,6 +175,8 @@ export default {
       this.articleParams.author = this.userInfo.username;
       getArticleListApi(this.articleParams).then((res) => {
         // 匿名发布的帖子不显示
+        let nullArr = [];
+        this.articleList = nullArr;
         res.data.articles.map((article) => {
           if (!article.anonymous) {
             this.articleList.push(article);

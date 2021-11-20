@@ -1,7 +1,7 @@
 /*
  * @Author: qiuqi
  * @Date: 2021-09-17 20:27:07
- * @LastEditTime: 2021-11-16 16:12:07
+ * @LastEditTime: 2021-11-19 14:32:36
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\api\api.js
@@ -159,6 +159,11 @@ export const createTagApi = (params) => {
 // 添加子标签
 export const createChildTagApi = (tagId, params) => {
   return http.axios.post('tags/create/' + tagId, params)
+}
+
+// 添加子标签图片
+export const createChildTagImageApi = (tagForm) => {
+  return http.axios.put('tags/create/image', tagForm)
 }
 
 // 编辑父标签

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-08-20 12:26:59
- * @LastEditTime: 2021-11-04 16:08:12
+ * @LastEditTime: 2021-11-20 15:34:15
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\main.js
@@ -19,6 +19,7 @@ Vue.prototype.$moment = moment;
 Vue.use(CKEditor);
 // 导入全局样式表
 import './assets/css/global.css'
+import './assets/css/content-styles.css'
 
 Vue.config.productionTip = false
 

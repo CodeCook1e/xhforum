@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-09-17 21:13:06
- * @LastEditTime: 2021-11-09 15:15:44
+ * @LastEditTime: 2021-11-18 21:35:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\api\index.js
@@ -79,7 +79,8 @@ function adminRemoveToken() {
 }
 
 const customAxios = axios.create();
-customAxios.defaults.baseURL = 'http://localhost:3000/api'; // 配置请求的根路径
+// customAxios.defaults.baseURL = 'http://localhost:3000/api'; // 配置请求的根路径
+customAxios.defaults.baseURL = 'http://192.168.31.113:3000/api'; // 配置请求的根路径
 customAxios.defaults.timeout = 10000; // 请求超时设置为10秒。
 customAxios.defaults.headers.post["Content-Type"] =
   "application/json;charset:utf-8";

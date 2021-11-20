@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-03 20:22:31
- * @LastEditTime: 2021-11-16 18:05:28
+ * @LastEditTime: 2021-11-20 15:50:08
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xhforum\src\pages\Article\Article.vue
@@ -48,9 +48,9 @@
             <div class="author">
               <a>
                 <a-avatar
-                  v-if="!isAnonymous"
+                  v-if="articleInfo.author && !isAnonymous"
                   class="author-img"
-                  :src="userInfo.image || defaultImgSrc"
+                  :src="articleInfo.author.image || defaultImgSrc"
                   alt="用户头像"
                   @click="getUserProfile(articleInfo.author._id)"
                 />
@@ -90,7 +90,7 @@
               </div>
             </div>
           </div>
-          <div class="article-body" v-html="articleInfo.body"></div>
+          <div class="article-html-body" v-html="articleInfo.body"></div>
         </div>
       </div>
     </div>
@@ -152,6 +152,7 @@
         </div>
       </div>
     </div>
+    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -171,6 +172,7 @@ import {
 } from "../../api/api";
 import http from "../../api/http";
 import moment from "moment";
+
 export default {
   data() {
     return {
@@ -192,7 +194,6 @@ export default {
       },
       defaultImgSrc:
         "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      anonymousImgSrc: "",
       // 当前文章文章是不是自己的
       isMine: false,
       // 是否已经关注当前文章作者
@@ -545,5 +546,9 @@ export default {
 .delete-article-btn {
   color: red;
   float: right;
+}
+
+.article-html-body {
+  overflow: hidden;
 }
 </style>

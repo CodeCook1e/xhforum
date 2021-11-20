@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-16 22:12:46
- * @LastEditTime: 2021-11-17 13:16:20
+ * @LastEditTime: 2021-11-18 15:17:44
  * @LastEditors: Please set LastEditors
  * @Description: 论坛首页
  * @FilePath: \xh_forum\src\pages\Home\Home.vue
@@ -152,6 +152,7 @@
         </div>
       </div>
     </div>
+    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 

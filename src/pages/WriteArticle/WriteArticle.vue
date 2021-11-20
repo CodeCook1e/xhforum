@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-29 15:15:50
- * @LastEditTime: 2021-11-16 17:40:31
+ * @LastEditTime: 2021-11-20 15:29:15
  * @LastEditors: Please set LastEditors
  * @Description: 创建文章页面
  * @FilePath: \xh_forum\src\pages\WriteArticle\WriteArticle.vue
@@ -150,6 +150,7 @@
         </a-radio>
       </a-radio-group>
     </a-modal>
+    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -163,10 +164,36 @@ export default {
       editor: ClassicEditor,
       editorData: "",
       editorConfig: {
-        // Run the editor with the German UI.
-        language: "zh-cn",
+        language: "zh",
+        toolbar: {
+          items: [
+            "heading",
+            "|",
+            "alignment",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "|",
+            "uploadImage",
+            "undo",
+            "redo",
+          ],
+        },
+        image: {
+          toolbar: [
+            "imageStyle:inline",
+            "imageStyle:wrapText",
+            "imageStyle:breakText",
+            "|",
+            "toggleImageCaption",
+            "imageTextAlternative",
+          ],
+        },
         ckfinder: {
-          uploadUrl: "http://localhost:3000/api/articles/upload",
+          // uploadUrl: "http://localhost:3000/api/articles/upload",
+          uploadUrl: "http://192.168.31.113:3000/api/articles/upload",
         },
       },
       tagsList: [],

@@ -9,11 +9,15 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^31.0.0",
     "@ckeditor/ckeditor5-ckfinder": "^31.0.0",
+    "@ckeditor/ckeditor5-dev-utils": "^26.0.1",
+    "@ckeditor/ckeditor5-dev-webpack-plugin": "^26.0.1",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
     "ant-design-vue": "^1.7.8",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "moment": "^2.29.1",
+    "postcss-loader": "^3.0.0",
+    "raw-loader": "^0.5.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0"
   },

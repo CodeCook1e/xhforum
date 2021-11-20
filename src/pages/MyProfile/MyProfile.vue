@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-25 15:40:57
- * @LastEditTime: 2021-11-17 13:24:37
+ * @LastEditTime: 2021-11-20 13:49:49
  * @LastEditors: Please set LastEditors
  * @Description: 我的资料页面
  * @FilePath: \xh_forum\src\pages\Profile\profile.vue
@@ -228,6 +228,7 @@
           </a-tabs>
         </div>
       </div>
+      <a-back-top :visibilityHeight="0" />
     </div>
 
     <!-- 编辑个人资料 对话框 -->
@@ -501,7 +502,6 @@ export default {
     // 修改头像
     updateImage(event) {
       console.log(event.currentTarget.files[0]);
-      this.updateImageParam.user.image = event.currentTarget.files[0];
       let forms = new FormData();
       forms.append("file", event.currentTarget.files[0]);
       updateImageApi(forms).then((res) => {
@@ -737,6 +737,9 @@ export default {
 }
 
 .uploader-file {
+  border-radius: 50%;
+  box-sizing: border-box;
+  padding: 50px;
   opacity: 0;
   position: absolute;
   top: 94px;
@@ -778,6 +781,10 @@ export default {
   color: red;
   float: right;
   margin-left: 20px;
+}
+
+.delete-article-btn:hover {
+  font-weight: 700;
 }
 
 .anonymous-tag {

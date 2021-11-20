@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-04 17:16:40
- * @LastEditTime: 2021-10-31 15:59:51
+ * @LastEditTime: 2021-11-18 14:55:55
  * @LastEditors: Please set LastEditors
  * @Description: 管理系统主页面
  * @FilePath: \xh_forum\src\pages\AdminHome\AdminHome.vue
@@ -19,18 +19,24 @@
       <a-layout-sider class="layout-sider" width="200" style="background: #fff">
         <a-menu
           mode="inline"
-          :default-selected-keys="['1']"
-          :default-open-keys="['sub1']"
+          :default-selected-keys="currentKey"
+          :default-open-keys="currentSub"
           :style="{ height: '100%', borderRight: 0 }"
         >
           <a-sub-menu key="sub1">
             <span slot="title"><a-icon type="user" />用户管理</span>
-            <a-menu-item key="1" @click="clickUser"> 用户列表 </a-menu-item>
+            <a-menu-item key="/adminhome/user" @click="clickUser">
+              用户列表
+            </a-menu-item>
           </a-sub-menu>
           <a-sub-menu key="sub2">
             <span slot="title"><a-icon type="laptop" />帖子管理</span>
-            <a-menu-item key="2" @click="clickArticle"> 帖子列表 </a-menu-item>
-            <a-menu-item key="3" @click="clickTag"> 分类列表 </a-menu-item>
+            <a-menu-item key="/adminhome/article" @click="clickArticle">
+              帖子列表
+            </a-menu-item>
+            <a-menu-item key="/adminhome/tag" @click="clickTag">
+              分类列表
+            </a-menu-item>
           </a-sub-menu>
         </a-menu>
       </a-layout-sider>
@@ -47,7 +53,20 @@ export default {
   data() {
     return {
       collapsed: false,
+      // 当前选择的 sub
+      currentSub: [],
+      // 当前选择的 key
+      currentKey: [],
     };
+  },
+  created() {
+    this.currentKey.push(this.$route.path);
+    if (this.$route.path == "/adminhome/user") {
+      this.currentSub.push("sub1");
+    } else {
+      this.currentSub.push("sub2");
+    }
+    console.log(this.$route.path);
   },
   methods: {
     // 退出登录
