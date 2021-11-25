@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-16 22:12:46
- * @LastEditTime: 2021-11-18 15:17:44
+ * @LastEditTime: 2021-11-25 13:29:23
  * @LastEditors: Please set LastEditors
  * @Description: 论坛首页
  * @FilePath: \xh_forum\src\pages\Home\Home.vue
@@ -178,6 +178,7 @@ export default {
       pagination: {
         pageSize: 10,
       },
+      getHotArticleListParam: {},
     };
   },
   components: {
@@ -215,7 +216,8 @@ export default {
     },
     // 获取热门文章列表
     getHotArticleList() {
-      getHotArticleListApi().then((res) => {
+      this.getHotArticleListParam.limit = 10;
+      getHotArticleListApi(this.getHotArticleListParam).then((res) => {
         console.log(res.data.articles);
         this.hotArticleList = res.data.articles;
         this.hotArticleList.map((article) => {

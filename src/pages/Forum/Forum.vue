@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-16 22:12:46
- * @LastEditTime: 2021-11-19 17:23:57
+ * @LastEditTime: 2021-11-25 13:41:16
  * @LastEditors: Please set LastEditors
  * @Description: 论坛首页
  * @FilePath: \xh_forum\src\pages\Home\Home.vue
@@ -135,7 +135,70 @@
                 </div>
               </div>
             </a-tab-pane>
-            <a-tab-pane key="2" tab="最多收藏"> 最多收藏 </a-tab-pane>
+            <a-tab-pane key="2" tab="最多收藏">
+              <div class="article-list">
+                <div class="article-list-content">
+                  <a-list
+                    item-layout="vertical"
+                    size="large"
+                    :pagination="pagination"
+                    :data-source="hotArticleList"
+                  >
+                    <a-list-item
+                      slot="renderItem"
+                      key="item.title"
+                      slot-scope="item"
+                    >
+                      <template slot="actions">
+                        <span
+                          v-if="!item.anonymous"
+                          class="user-info-username"
+                          @click="getMoreAuthor(item.author._id)"
+                          >{{ item.author.username }}</span
+                        >
+                        <span v-else class="user-info-username">匿名用户</span>
+                        <span class="user-info-updateAt">{{
+                          item.updateAt
+                        }}</span>
+                        <span @click="getMoreArticle(item._id)">
+                          <a-icon type="star-o" style="margin-right: 8px" />
+                          {{ item.favoritesCount }}
+                        </span>
+                        <span @click="getMoreArticle(item._id)">
+                          <a-icon type="message" style="margin-right: 8px" />
+                          {{ item.comments.length }}
+                        </span>
+                        <!-- <span class="article-tag">
+                          <a-tag color="#32b16c">{{ item.tagList[0] }}</a-tag>
+                        </span> -->
+                      </template>
+                      <a-list-item-meta :description="item.description">
+                        <a slot="title" @click="getMoreArticle(item._id)">{{
+                          item.title
+                        }}</a>
+                        <a-avatar
+                          v-if="!item.anonymous"
+                          class="user-info-avatar"
+                          slot="avatar"
+                          :src="item.author.image || defaultImgSrc"
+                          @click="getMoreAuthor(item.author._id)"
+                        />
+                        <a-avatar
+                          v-else
+                          class="user-info-avatar"
+                          slot="avatar"
+                          alt="用户头像"
+                          ><a-icon
+                            class="author-img-icon"
+                            slot="icon"
+                            type="user"
+                        /></a-avatar>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
+                </div>
+              </div>
+            </a-tab-pane>
           </a-tabs>
         </div>
       </div>
@@ -150,6 +213,7 @@ import {
   getArticleListApi,
   getTagsApi,
   getCurrentUserApi,
+  getHotArticleListApi,
 } from "../../api/api";
 export default {
   data() {
@@ -161,6 +225,7 @@ export default {
       tagsList: [],
       tagParams: {},
       articleList: [],
+      hotArticleList: [],
       pagination: {
         pageSize: 10,
       },
@@ -175,6 +240,7 @@ export default {
       console.log(this.$route.params.tagname);
       this.tagParams.tag = this.$route.params.tagname;
       this.getArticleList();
+      this.getHotArticleList();
     }
     // 获取标签列表
     this.getTags();
@@ -204,6 +270,22 @@ export default {
         });
       });
     },
+    // 获取当前标签的热门文章
+    getHotArticleList() {
+      getHotArticleListApi(this.tagParams).then((res) => {
+        this.hotArticleList = res.data.articles;
+        this.hotArticleList.map((article) => {
+          article.createAt = this.$moment(article.createAt).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+          article.updateAt = this.$moment(article.updateAt).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+          article.commentCount = article.comments.length;
+        });
+      });
+    },
+    // 获取标签列表
     getTags() {
       getTagsApi().then((res) => {
         this.tagsList = res.data.tags;
@@ -231,6 +313,7 @@ export default {
       this.isChooseTag = true;
       this.tagParams.tag = this.$route.params.tagname;
       this.getArticleList();
+      this.getHotArticleList();
     },
   },
 };

@@ -1,7 +1,7 @@
 /*
  * @Author: qiuqi
  * @Date: 2021-09-17 20:27:07
- * @LastEditTime: 2021-11-19 14:32:36
+ * @LastEditTime: 2021-11-25 13:28:32
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xh_forum\src\api\api.js
@@ -89,8 +89,12 @@ export const getArticleListApi = (params) => {
   })
 }
 // 获取热门文章列表
-export const getHotArticleListApi = () => {
-  return http.axios.get('/articles/hot')
+export const getHotArticleListApi = (params) => {
+  return http.axios({
+    url: '/articles/hot',
+    method: 'GET',
+    params: params
+  })
 }
 // 获取用户关注的作者文章列表
 export const getFeedArticlesApi = () => {
