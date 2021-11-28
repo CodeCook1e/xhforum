@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-16 22:12:46
- * @LastEditTime: 2021-11-25 13:41:16
+ * @LastEditTime: 2021-11-28 17:34:28
  * @LastEditors: Please set LastEditors
  * @Description: 论坛首页
  * @FilePath: \xh_forum\src\pages\Home\Home.vue
@@ -202,8 +202,74 @@
           </a-tabs>
         </div>
       </div>
+      <div
+        :class="
+          !isChooseTag
+            ? 'little-write-article-btn'
+            : 'little-write-article-btn-isChooseTag'
+        "
+        @click="showDrawer()"
+      >
+        <a-icon
+          class="little-write-article-icon-edit"
+          type="appstore"
+          theme="twoTone"
+          two-tone-color="#fff"
+        />
+      </div>
     </div>
-    <a-back-top :visibilityHeight="0" />
+    <a-drawer
+      class="tag-drawer"
+      title="话题分类"
+      placement="left"
+      :closable="false"
+      :visible="tagVisible"
+      @close="onClose"
+      width="280px"
+    >
+      <div class="tag-container-isChooseTag-drawer">
+        <div class="tag-content" v-for="(tag, index) in tagsList" :key="index">
+          <div class="tag-header">
+            <div class="tag-header-tab-drawer">{{ tag.tagname }}</div>
+          </div>
+          <div class="tag-body-content">
+            <div
+              class="tag-body"
+              v-for="(childTag, index) in tag.children"
+              :key="index"
+            >
+              <div class="tag-item">
+                <div class="tag-item-image-drawer">
+                  <img :src="childTag.image" alt="" />
+                </div>
+                <div class="tag-item-detail">
+                  <div class="tag-item-detail-title-wrap">
+                    <div
+                      class="tag-item-detail-title-drawer"
+                      @click="goForumByTag(childTag.tagname)"
+                    >
+                      #{{ childTag.tagname }}
+                    </div>
+                    <div class="tag-item-detail-desc">
+                      <span class="tag-item-detail-desc-title"
+                        >标签介绍：{{ childTag.describe }}</span
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="tag-item-get-drawer"
+                    @click="goForumByTag(childTag.tagname)"
+                  >
+                    <span>点击查看</span>
+                    <a-icon type="right" style="font-size: 10px" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </a-drawer>
   </div>
 </template>
 
@@ -229,6 +295,7 @@ export default {
       pagination: {
         pageSize: 10,
       },
+      tagVisible: false,
     };
   },
   components: {
@@ -295,17 +362,17 @@ export default {
     // 跳转到作者页面
     getMoreAuthor(userId) {
       if (this.userInfo._id === userId) {
-        window.open(`/myprofile`, "_blank");
-        // this.$router.push("/myprofile/");
+        // window.open(`/myprofile`, "_blank");
+        this.$router.push("/myprofile/");
       } else {
-        window.open(`/profile/${userId}`, "_blank");
-        // this.$router.push("/profile/" + userId);
+        // window.open(`/profile/${userId}`, "_blank");
+        this.$router.push("/profile/" + userId);
       }
     },
     // 跳转到帖子详细信息页面
     getMoreArticle(articleId) {
-      window.open(`/article/${articleId}`, "_blank");
-      // this.$router.push("/article/" + articleId);
+      // window.open(`/article/${articleId}`, "_blank");
+      this.$router.push("/article/" + articleId);
     },
     // 跳转到对应标签的论坛中心
     goForumByTag(tagname) {
@@ -314,6 +381,15 @@ export default {
       this.tagParams.tag = this.$route.params.tagname;
       this.getArticleList();
       this.getHotArticleList();
+      this.tagVisible = false;
+    },
+    // 打开话题标签抽屉
+    showDrawer() {
+      this.tagVisible = true;
+    },
+    // 关闭话题标签抽屉
+    onClose() {
+      this.tagVisible = false;
     },
   },
 };
@@ -402,6 +478,7 @@ export default {
 }
 
 .tag-item-image > img {
+  border-radius: 15px;
   height: 80px;
   width: 80px;
 }
@@ -495,5 +572,118 @@ export default {
 }
 .user-info-avatar {
   cursor: pointer;
+}
+
+.little-write-article-btn {
+  display: none;
+}
+
+@media screen and (max-width: 751px) {
+  .forumBody {
+    min-width: 100vw;
+  }
+  .tag-header-tab {
+    margin-left: 10px;
+  }
+  .tag-item-image {
+    width: 60px;
+    height: 60px;
+  }
+  .tag-item-image > img {
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
+  }
+  .tag-item-detail {
+    margin-top: 0;
+  }
+  .tag-item-detail-title {
+    font-size: 16px;
+  }
+  .little-write-article-btn-isChooseTag {
+    display: block;
+    border-radius: 50%;
+    background-color: #fc7f00;
+    opacity: 0.5;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 55px;
+    right: 15px;
+    z-index: 100;
+  }
+  .little-write-article-btn {
+    display: none;
+  }
+  .little-write-article-icon-edit {
+    margin-top: 10px;
+    font-size: 20px;
+  }
+  .tag-container-isChooseTag {
+    display: none;
+  }
+  .tag-article-container-isChooseTag {
+    display: block;
+    flex: 1;
+    padding: 20px 0 0 0;
+  }
+  .tag-article-breadcrumb {
+    padding-left: 10px;
+    height: 31px;
+    border-bottom: 2px solid #02a682;
+  }
+  .tag-article-body {
+    background: #fff;
+    padding: 0 5px;
+  }
+  .tag-drawer {
+    padding: 0;
+  }
+  .tag-container-isChooseTag-drawer {
+    margin: -24px;
+    width: 280px;
+  }
+  .tag-body {
+    background: #fff;
+    padding: 10px 0 0px 5px;
+  }
+  .tag-item {
+    margin-right: 10px;
+  }
+  .tag-item-image-drawer {
+    width: 40px;
+    height: 40px;
+  }
+  .tag-item-image-drawer > img {
+    border-radius: 15px;
+    width: 40px;
+    height: 40px;
+  }
+  .tag-header-tab-drawer {
+    margin-left: 10px;
+    display: inline-block;
+    font-size: 15px;
+    color: #222;
+    line-height: 30px;
+  }
+  .tag-item-detail-title-drawer {
+    cursor: pointer;
+    width: 100px;
+    padding-right: 6px;
+    font-size: 15px;
+    color: #191c22;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .tag-item-get-drawer {
+    cursor: pointer;
+    max-width: 40%;
+    font-size: 12px;
+    font-weight: 300;
+    color: #aaa;
+    vertical-align: middle;
+    float: right;
+  }
 }
 </style>

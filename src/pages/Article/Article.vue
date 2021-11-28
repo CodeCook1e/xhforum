@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-11-03 20:22:31
- * @LastEditTime: 2021-11-20 15:50:08
+ * @LastEditTime: 2021-11-28 17:42:01
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \xhforum\src\pages\Article\Article.vue
@@ -33,6 +33,8 @@
               <a-icon type="heart" />
               <span>{{ articleInfo.favoritesCount }}</span>
             </a-button>
+          </div>
+          <div>
             <a-popconfirm
               title="此操作将永久删除此文章，确定删除?"
               okText="确定"
@@ -152,7 +154,6 @@
         </div>
       </div>
     </div>
-    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -550,5 +551,54 @@ export default {
 
 .article-html-body {
   overflow: hidden;
+}
+
+@media screen and (max-width: 751px) {
+  .pageBody {
+    min-width: 100vw;
+  }
+  .article-container-body {
+    padding: 0;
+  }
+  .article-container {
+    max-width: 100vw;
+  }
+  .article-title {
+    font-size: 20px;
+    font-weight: 700;
+    word-break: break-word;
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+  .delete-article-btn {
+    margin-top: 10px;
+  }
+  .article-container {
+    max-width: 100vw;
+  }
+  .article-container-left {
+    max-width: 100vw;
+  }
+  .article-comment-container {
+    max-width: 100vw;
+  }
+  .article-comment-body {
+    max-width: 100vw;
+    margin-bottom: 100px;
+  }
+  .article-comment-body > div {
+    padding: 0 15px;
+    max-width: 100vw;
+  }
+  .article-comment-body > div:first-child {
+    padding: 0 15px 0 3px;
+  }
+  .article-title {
+    max-width: 200px;
+  }
+  .article-tag {
+    margin-left: 10px;
+    margin-right: 15px;
+  }
 }
 </style>

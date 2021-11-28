@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-16 22:12:46
- * @LastEditTime: 2021-11-25 13:29:23
+ * @LastEditTime: 2021-11-28 17:01:52
  * @LastEditors: Please set LastEditors
  * @Description: 论坛首页
  * @FilePath: \xh_forum\src\pages\Home\Home.vue
@@ -152,7 +152,14 @@
         </div>
       </div>
     </div>
-    <a-back-top :visibilityHeight="0" />
+    <div class="little-write-article-btn" @click="createArticle()">
+      <a-icon
+        class="little-write-article-icon-edit"
+        type="edit"
+        theme="twoTone"
+        two-tone-color="#fff"
+      />
+    </div>
   </div>
 </template>
 
@@ -251,17 +258,17 @@ export default {
     },
     // 跳转到帖子详细信息页面
     getMoreArticle(articleId) {
-      window.open(`/article/${articleId}`, "_blank");
-      // this.$router.push("/article/" + articleId);
+      // window.open(`/article/${articleId}`, "_blank");
+      this.$router.push("/article/" + articleId);
     },
     // 跳转到作者页面
     getMoreAuthor(userId) {
       if (this.userInfo._id === userId) {
-        window.open(`/myprofile`, "_blank");
-        // this.$router.push("/myprofile/");
+        // window.open(`/myprofile`, "_blank");
+        this.$router.push("/myprofile/");
       } else {
-        window.open(`/profile/${userId}`, "_blank");
-        // this.$router.push("/profile/" + userId);
+        // window.open(`/profile/${userId}`, "_blank");
+        this.$router.push("/profile/" + userId);
       }
     },
     // 跳转到对应标签的论坛中心
@@ -549,5 +556,54 @@ export default {
 
 .hot-title:hover {
   color: #32b16c;
+}
+
+.little-write-article-btn {
+  display: none;
+}
+
+@media screen and (max-width: 751px) {
+  .forumBody {
+    min-width: 100vw;
+  }
+  .forumHomeContainer {
+    min-width: 100vw;
+  }
+  .home-body {
+    flex-direction: column;
+    min-width: 100vw;
+  }
+  .home-body-left {
+    margin: 0;
+  }
+  .home-body-right {
+    max-width: 100vw;
+
+    min-width: 100vw;
+    margin-top: 20px;
+  }
+  .entranceLayout {
+    display: none;
+  }
+  .hot-article-item {
+    width: 340px;
+  }
+  .little-write-article-btn {
+    border-radius: 50%;
+    background-color: #fc7f00;
+    opacity: 0.5;
+    text-align: center;
+    width: 40px;
+    height: 40px;
+    display: block;
+    position: fixed;
+    bottom: 55px;
+    right: 15px;
+    z-index: 100;
+  }
+  .little-write-article-icon-edit {
+    margin-top: 10px;
+    font-size: 20px;
+  }
 }
 </style>

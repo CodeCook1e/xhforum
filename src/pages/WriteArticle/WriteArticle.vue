@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-29 15:15:50
- * @LastEditTime: 2021-11-20 15:29:15
+ * @LastEditTime: 2021-11-28 16:54:46
  * @LastEditors: Please set LastEditors
  * @Description: 创建文章页面
  * @FilePath: \xh_forum\src\pages\WriteArticle\WriteArticle.vue
@@ -150,7 +150,6 @@
         </a-radio>
       </a-radio-group>
     </a-modal>
-    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -369,5 +368,31 @@ export default {
 
 .anonymous-alert {
   margin-bottom: 10px;
+}
+
+@media screen and (max-width: 751px) {
+  .pageBody {
+    min-width: 100vw;
+  }
+  .articleContainer-body {
+    padding-top: 62px;
+    min-width: 100vw;
+  }
+  .articleContainer {
+    margin: 0px;
+    padding: 62px 20px 80px 20px;
+    max-width: 100vw;
+    border-radius: 0px;
+  }
+  .article-body {
+    max-width: 100vw;
+  }
+  #ckeditor {
+    padding: 0px 10px 0px 10px;
+    max-width: 98vw;
+  }
+  .article-tag {
+    margin-top: 30px;
+  }
 }
 </style>

@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-08-25 16:27:09
- * @LastEditTime: 2021-11-16 15:09:01
+ * @LastEditTime: 2021-11-28 16:59:05
  * @LastEditors: Please set LastEditors
  * @Description: 导航栏
  * @FilePath: \xh_forum\src\components\Navbar.vue
@@ -92,9 +92,27 @@
         </li>
         <li class="drawer-item">
           <a
-            :class="this.$route.path == '/forum' ? 'list-active' : ''"
+            :class="
+              this.$route.matched[0].path == '/forum/:tagname'
+                ? 'list-active'
+                : ''
+            "
             @click="goforum"
             >论坛中心</a
+          >
+        </li>
+        <li class="drawer-item">
+          <a
+            :class="this.$route.path == '/writearticle' ? 'list-active' : ''"
+            @click="gowritearticle"
+            >写帖子</a
+          >
+        </li>
+        <li class="drawer-item">
+          <a
+            :class="this.$route.path == '/myprofile' ? 'list-active' : ''"
+            @click="gomyprofile"
+            >个人中心</a
           >
         </li>
       </ul>
@@ -161,6 +179,14 @@ export default {
         this.$message.warning("请先登录再进行操作！");
       } else {
         this.$router.push("/writearticle");
+      }
+    },
+    // 跳转到个人中心页面
+    gomyprofile() {
+      if (!this.isLogin) {
+        this.$message.warning("请先登录再进行操作！");
+      } else {
+        this.$router.push("/myprofile");
       }
     },
   },

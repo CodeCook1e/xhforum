@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-10-28 16:23:15
- * @LastEditTime: 2021-11-18 21:50:35
+ * @LastEditTime: 2021-11-28 18:53:22
  * @LastEditors: Please set LastEditors
  * @Description: 个人资料页面
  * @FilePath: \xh_forum\src\pages\Profile\Profile.vue
@@ -119,7 +119,6 @@
         </div>
       </div>
     </div>
-    <a-back-top :visibilityHeight="0" />
   </div>
 </template>
 
@@ -458,5 +457,24 @@ export default {
   border-color: #1e9654;
   background-color: #1e9654;
   color: #fff;
+}
+
+@media screen and (max-width: 751px) {
+  .forumBody {
+    min-width: 100vw;
+  }
+  .userArticleContainer {
+    padding: 30px 20px;
+  }
+  .article-preview {
+    padding: 10px 0px;
+  }
+  .article-title {
+    font-size: 1.2rem !important;
+  }
+  .article-description {
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
 }
 </style>

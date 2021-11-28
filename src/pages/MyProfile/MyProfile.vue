@@ -1,7 +1,7 @@
 <!--
  * @Author: qiuqi
  * @Date: 2021-09-25 15:40:57
- * @LastEditTime: 2021-11-20 13:49:49
+ * @LastEditTime: 2021-11-28 18:53:47
  * @LastEditors: Please set LastEditors
  * @Description: 我的资料页面
  * @FilePath: \xh_forum\src\pages\Profile\profile.vue
@@ -216,6 +216,7 @@
                         <a-button
                           class="list-follow-button"
                           @click="unfollow(item._id)"
+                          size="small"
                         >
                           已关注
                         </a-button>
@@ -228,7 +229,6 @@
           </a-tabs>
         </div>
       </div>
-      <a-back-top :visibilityHeight="0" />
     </div>
 
     <!-- 编辑个人资料 对话框 -->
@@ -442,8 +442,8 @@ export default {
 
     // 跳转到文章详情页面
     getArticle(articleId) {
-      window.open(`/article/${articleId}`, "_blank");
-      // this.$router.push("/article/" + articleId);
+      // window.open(`/article/${articleId}`, "_blank");
+      this.$router.push("/article/" + articleId);
     },
 
     // 收藏文章
@@ -471,8 +471,8 @@ export default {
       if (this.userInfo._id === userId) {
         this.$router.push("/myprofile/");
       } else {
-        window.open(`/profile/${userId}`, "_blank");
-        // this.$router.push("/profile/" + userId);
+        // window.open(`/profile/${userId}`, "_blank");
+        this.$router.push("/profile/" + userId);
       }
     },
 
@@ -789,5 +789,38 @@ export default {
 
 .anonymous-tag {
   float: right;
+}
+
+@media screen and (max-width: 751px) {
+  .forumBody {
+    min-width: 100vw;
+  }
+  .userArticleContainer {
+    padding: 30px 20px;
+  }
+  .article-preview {
+    padding: 10px 0px;
+  }
+  .article-title {
+    font-size: 1.2rem !important;
+  }
+  .article-description {
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+  }
+  .user-list-item-img {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+  }
+  .list-item-follow-font {
+    padding: 0 10px 0 20px;
+  }
+  .list-item-bio {
+    font-size: 13px;
+  }
+  .list-item-otherinfo {
+    font-size: 13px;
+  }
 }
 </style>
